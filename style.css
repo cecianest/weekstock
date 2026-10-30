@@ -38,3 +38,5 @@
 .full-article .article-hint{color:#f5d76e;font-size:15px;font-weight:700;margin:24px 0;line-height:1.9}.full-article #back-to-articles{font-size:15px;font-weight:700;padding:14px 0;min-height:44px}
 
 .article-title-link>span.is-complete,.learning-checklist>span.is-complete{color:#79d9a3}.learning-checklist>span.is-incomplete{color:#ff8794}.reading-article .modal-actions #back-to-articles{font-size:15px;min-height:44px;font-weight:700}
+
+.tooltip-price{white-space:pre-line}.history-candle{pointer-events:none}
