@@ -36,3 +36,5 @@
 .order-stock-picker{border:1px solid var(--line);border-radius:7px;padding:8px 10px;gap:10px}.order-stock-picker select{min-width:0;width:100%;color:var(--ink);background:var(--surface);border:0;padding:6px 4px;font:700 13px 'Malgun Gothic',sans-serif;cursor:pointer;color-scheme:light}.theme-2 .order-stock-picker select{color-scheme:dark}.order-stock-picker select:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.order-stock-picker option{color:var(--ink);background:var(--surface)}
 
 .full-article .article-hint{color:#f5d76e;font-size:15px;font-weight:700;margin:24px 0;line-height:1.9}.full-article #back-to-articles{font-size:15px;font-weight:700;padding:14px 0;min-height:44px}
+
+.article-title-link>span.is-complete,.learning-checklist>span.is-complete{color:#79d9a3}.learning-checklist>span.is-incomplete{color:#ff8794}.reading-article .modal-actions #back-to-articles{font-size:15px;min-height:44px;font-weight:700}
