@@ -52,3 +52,5 @@
 .today-information-actions button{flex-direction:column;align-items:flex-start;gap:6px}.today-information-actions b{word-break:keep-all}
 
 .article-title-link .memo-judgment{display:inline-block;margin-left:8px;font-size:inherit;font-weight:700}.article-title-link .memo-judgment-positive{color:#ff8794}.article-title-link .memo-judgment-negative{color:#79b5ff}.article-title-link .memo-judgment-neutral{color:#f5d76e}
+
+.judgment-options label:has(input[value="positive"]){color:#ff8794}.judgment-options label:has(input[value="negative"]){color:#79b5ff}.judgment-options label:has(input[value="neutral"]){color:#f5d76e}.judgment-options input[value="positive"]{accent-color:#ff8794}.judgment-options input[value="negative"]{accent-color:#79b5ff}.judgment-options input[value="neutral"]{accent-color:#f5d76e}
