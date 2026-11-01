@@ -64,3 +64,4 @@
 .financial-statement th small{word-break:keep-all;overflow-wrap:normal}
 
 .stock-row .company .financial-read-status{font-size:10px;white-space:nowrap;margin-top:6px}.financial-read-status.is-complete{color:#79d9a3!important}.financial-read-status.is-incomplete{color:#ff8794!important}
+.financial-read-status.is-complete{display:inline-block;background:rgba(121,217,163,.14);border-radius:5px;padding:3px 6px}
