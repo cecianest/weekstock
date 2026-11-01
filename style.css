@@ -62,3 +62,5 @@
 
 .financial-statement table{table-layout:fixed}.financial-statement th:first-child{width:43%}.financial-statement th small{overflow-wrap:anywhere}.financial-statement thead th{white-space:nowrap}@media(max-width:400px){.financial-statement th,.financial-statement td{padding:10px 3px}.financial-statement th:first-child{width:40%}}
 .financial-statement th small{word-break:keep-all;overflow-wrap:normal}
+
+.stock-row .company .financial-read-status{font-size:10px;white-space:nowrap;margin-top:6px}.financial-read-status.is-complete{color:#79d9a3!important}.financial-read-status.is-incomplete{color:#ff8794!important}
