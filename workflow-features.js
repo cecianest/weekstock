@@ -27,11 +27,11 @@ function judgmentReview(){
 }
 
 // Render a fixed-width, high-resolution result card without third-party services.
-function createResultCanvas(){
+function createResultCanvas(name){
  if(state.day!==4)throw Error('금요일 결산에서 저장할 수 있어요.');
  const held=stocks.map((s,i)=>({...s,...state.hold[i]})).filter(s=>s.q>0);
  const value=held.reduce((sum,s)=>sum+s.price*s.q,0),total=state.cash+value,gain=total-1000000;
- const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1390+Math.max(1,held.length)*102;
+ const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1438+Math.max(1,held.length)*102;
  const c=canvas.getContext('2d');if(!c)throw Error('이미지 생성을 지원하지 않는 브라우저입니다.');
  const ink='#e5edf8',muted='#9daec4',line='#31445e',accent='#82aaff';
  const text=(content,x,y,size=28,color=ink,weight=400,align='left')=>{c.fillStyle=color;c.font=`${weight} ${size}px "Malgun Gothic", "Apple SD Gothic Neo", sans-serif`;c.textAlign=align;c.fillText(content,x,y);};
@@ -39,7 +39,9 @@ function createResultCanvas(){
  const card=(y,h)=>{c.fillStyle='#1a293e';c.beginPath();c.roundRect(48,y,984,h,24);c.fill();c.strokeStyle=line;c.lineWidth=2;c.stroke();};
  c.fillStyle='#111c2d';c.fillRect(0,0,canvas.width,canvas.height);
  text('위크스탁',64,86,32,accent,700);text('금요일 · 최종 결산',1016,86,26,muted,400,'right');
- text('나의 투자 결과',540,184,52,ink,700,'center');
+ text('나의 투자 결과',540,174,52,ink,700,'center');
+ let nameSize=36;c.font=`700 ${nameSize}px "Malgun Gothic", "Apple SD Gothic Neo", sans-serif`;while(c.measureText(name).width>920&&nameSize>20){nameSize--;c.font=`700 ${nameSize}px "Malgun Gothic", "Apple SD Gothic Neo", sans-serif`;}text(name,540,232,nameSize,accent,700,'center');
+ c.save();c.translate(0,48);
  card(232,384);text('최종 총자산',540,300,30,muted,400,'center');
  text(money(total)+'원',540,397,76,ink,700,'center');
  text('총손익 '+signed(gain)+'원 ('+(gain/10000).toFixed(2)+'%)',540,460,34,gain>=0?'#ff8794':'#79b5ff',700,'center');
@@ -50,19 +52,25 @@ function createResultCanvas(){
  if(!held.length)text('보유한 주식이 없어요. 현금으로 보유 중입니다.',92,1168,28,muted);
  held.forEach((s,i)=>{const y=1164+i*102;text(s.name,92,y,30,ink,700);text(s.q+'주 · '+money(s.q*s.price)+'원',988,y,29,ink,700,'right');text('평균매입가 '+money(s.avg)+'원',92,y+36,23,muted);});
  const bottom=1002+holdingHeight;text('매수 '+state.logs.filter(l=>l.side==='매수').length+'회 · 매도 '+state.logs.filter(l=>l.side==='매도').length+'회',64,bottom+68,26,muted);text('월–목 거래 · 금요일 결산',64,bottom+112,23,muted);
- text('위크스탁 투자 체험',1016,canvas.height-44,23,accent,400,'right');
+ c.restore();text('위크스탁 투자 체험',1016,canvas.height-44,23,accent,400,'right');
  return canvas;
 }
-async function saveResultImage(){
- const button=document.querySelector('[data-action="save-result"]');if(!button||button.disabled)return;
+let resultExportName='';
+function saveResultImage(){
+ if(state.day!==4)return;
+ modal('결과 이미지 저장','<label for="result-export-name" class="export-name-label">이름</label><input id="result-export-name" type="text" maxlength="30" required autocomplete="name" placeholder="이름을 입력해 주세요"><p class="export-name-hint">입력한 이름이 결과 이미지에 표시됩니다.</p>','이미지 저장',()=>{});
+ const input=document.querySelector('#result-export-name'),button=document.querySelector('#confirm-action');input.value=resultExportName;input.focus();input.oninput=()=>input.setCustomValidity('');
+ const save=async()=>{if(button.disabled)return;const name=input.value.trim();input.setCustomValidity(name?'':'이미지에 표시할 이름을 입력해 주세요.');if(!input.reportValidity())return;await downloadResultImage(name,button);};
+ button.onclick=save;input.onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();save();}};
+}
+async function downloadResultImage(name,button){
  button.disabled=true;button.textContent='이미지 만드는 중…';
  try{
   await document.fonts.ready;
-  const canvas=createResultCanvas();
+  const canvas=createResultCanvas(name);
   const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(Error('이미지를 만들지 못했어요.')),'image/png'));
-  const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='위크스탁_나의투자결과.png';document.body.append(link);link.click();link.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),60000);
-  toast('결과 이미지를 저장했어요.');
+  const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='위크스탁_'+name.replace(/[\\/:*?"<>|]/g,'_')+'_투자결과.png';document.body.append(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),60000);resultExportName=name;document.querySelector('#dialog').close();toast('결과 이미지를 저장했어요.');
  }catch(e){toast(e.message||'이미지를 저장하지 못했어요. 다시 시도해 주세요.');}
- finally{button.disabled=false;button.textContent='결과 이미지 저장 ↓';}
+ finally{button.disabled=false;button.textContent='이미지 저장';}
 }
